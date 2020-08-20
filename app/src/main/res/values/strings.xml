@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">ToDo</string>
+    <string name="edit_item">Edit</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="no_information">No information provided!</string>
+    <string name="success">Item was added!</string>
+    <string name="update">Item was updated!</string>
 </resources>

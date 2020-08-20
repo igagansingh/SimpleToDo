@@ -1,10 +1,14 @@
 package com.visionary.developers.todo;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -44,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
         items = loadItems();
 
-        itemsAdapter = new ItemsAdapter(items, new ItemsAdapter.OnLongClickListener() {
+        ItemsAdapter.OnLongClickListener onLongClickListener = new ItemsAdapter.OnLongClickListener() {
             @Override
             public void onItemLongClicked(int position) {
                 items.remove(position);
@@ -52,7 +56,45 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Item was removed!", Toast.LENGTH_SHORT).show();
                 saveItems();
             }
-        });
+        };
+
+        ItemsAdapter.OnClickListener onClickListener = new ItemsAdapter.OnClickListener() {
+            @Override
+            public void onItemClicked(int position) {
+                EditText editText = new EditText(MainActivity.this);
+                editText.setText(items.get(position));
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setMessage(R.string.edit_item)
+                        .setView(editText)
+                        .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                String s = editText.getText().toString();
+                                if(s.equals("") || s.trim().equals("")) {
+                                    Toast.makeText(getApplicationContext(), R.string.no_information, Toast.LENGTH_SHORT).show();
+                                }
+                                else {
+                                    items.set(position, s);
+                                    itemsAdapter.notifyItemChanged(position);
+                                    editText.setText("");
+                                    Toast.makeText(getApplicationContext(), R.string.update, Toast.LENGTH_SHORT).show();
+                                    saveItems();
+                                }
+                            }
+                        })
+                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // User cancelled the dialog
+                            }
+                        });
+
+                AlertDialog dialog = builder.create();
+                dialog.setCancelable(false);
+                dialog.show();
+            }
+        };
+
+        itemsAdapter = new ItemsAdapter(items, onLongClickListener, onClickListener);
         rView.setAdapter(itemsAdapter);
         rView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -62,19 +104,18 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String s = eText.getText().toString();
                 if(s.equals("") || s.trim().equals("")) {
-                    Toast.makeText(getApplicationContext(), "No information provided!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.no_information, Toast.LENGTH_SHORT).show();
                 }
                 else {
                     items.add(s);
                     itemsAdapter.notifyItemInserted(items.size()-1);
                     eText.setText("");
-                    Toast.makeText(getApplicationContext(), "Item was added!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.success, Toast.LENGTH_SHORT).show();
                     saveItems();
                 }
             }
         });
     }
-
 
     private File getDataFile() {
         return new File(getFilesDir(), FILE_NAME);
