@@ -4,6 +4,7 @@
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="no_information">No information provided!</string>
-    <string name="success">Item was added!</string>
+    <string name="added">Item was added!</string>
+    <string name="removed">Item was removed!</string>
     <string name="update">Item was updated!</string>
 </resources>
