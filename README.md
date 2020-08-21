@@ -25,7 +25,7 @@ The following **additional** features are implemented:
 
 ## Video Walkthrough
 
-<img src='todo.gif' title='Video Walkthrough' width='' alt='Video Walkthrough' />
+<img src='todo.gif' title='Video Walkthrough' width='400' alt='Video Walkthrough' />
 
 ## License
 
